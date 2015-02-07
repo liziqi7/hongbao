@@ -24,30 +24,63 @@
                 <div class="panel2">
                     <img src="resource/images/t2.png" class="t2"/>
                     <div class="ipt2"> 
-                        <input type="number" placeholder="如已婚，请输入家庭月收入"/>
+                        <input type="tel" class="js-money" placeholder="如已婚，请输入家庭月收入"/>
                     </div>
                 </div>
                 <img src="resource/images/bg2.png" class="bg2" />
+                <div class="btn-next js-next"></div>
             </div>
-            <div class="wrapper3 js-wrapper3">
+            <div class="wrapper3 js-wrapper3 ">
                 <img src="resource/images/t3.png" class="t3"/>
                 <div class="panel3">
-                    <div class="slide-wapper">
-                        <ul>
+                    <div class="slider" id="js-slider">
+                        <ul class="slider-list">
                             <li><img src="resource/images/1.png"></li>
                             <li><img src="resource/images/2.png"></li>
                             <li><img src="resource/images/3.png"></li>
+                            <li><img src="resource/images/4.png"></li>
+                            <li><img src="resource/images/5.png"></li>
+                            <li><img src="resource/images/6.png"></li>
+                            <li><img src="resource/images/7.png"></li>
+                            <li><img src="resource/images/8.png"></li>
+                            <li><img src="resource/images/9.png"></li>
                         </ul>
                     </div>
-                    <div class="">
-                        爷爷/奶奶 <span>0</span>个
+                    <div class="call3" id="js-slider-name">
                     </div>
-                    <div class="btn-left"></div>   
-                    <div class="btn-right"></div>
-                    <div class="btn-minus"></div>
-                    <div class="btn-add"></div>
+                    <div class="btn-left js-btn-left"></div>   
+                    <div class="btn-right js-btn-right"></div>
+                    <div class="btn-minus js-btn-minus"></div>
+                    <div class="btn-add js-btn-add"></div>
+                    <div class="btn-add-hongbao js-add-hongbao"></div>
                 </div>
+                <div class="info-panel3 ">
+                    <ul id="js-slider-info">
+                        <li>
+                        </li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="btn-count js-count"></div>
             </div>
+            <div class="wrapper4 js-wrapper4 hide">
+                <img src="resource/images/t4.png" class="t4"/>
+                <div class="panel4">
+                    <ul class="list4" id="js-list">
+                    </ul>
+                    <div class="num4 js-count-num"></div>
+                    <div class="money4 js-count-money"></div>
+                </div>
+                <div class="btn-identify js-identify"></div>
+            </div>
+            <div class="wrapper5 js-wrapper5 hide">
+                <img src="resource/images/pic.png" class="pic" />
+                <p class="txt p1">XXX</p>
+                <div class="t5" id="js-panel5"></div>
+                <div class="btn-share js-btn-share"></div>
+            </div>  
         </div>
         <div class="pop loading hide" id="js-loading">
             <div class="load-png">
@@ -82,13 +115,184 @@
         }, 100)
     };
    $(function(){
+        var mySwipe,cachePage=0,globla_money=0,globla_idx=0;
+        var alimit=[5000,8000,1100,20000,50000];
+        var oMoney={
+            "0":[200,200,200,100,100,100,100,200,100],
+            "1":[500,500,500,200,100,200,200,500,100],
+            "2":[700,700,700,300,200,300,300,500,200],
+            "3":[1000,1000,1000,500,300,500,500,1000,200],
+            "4":[2000,2000,3000,600,500,500,600,1000,500],
+            "5":[10000,10000,10000,1000,1000,2000,2000,2000,500],
+        }
+
+        function checkLimit(){
+            $.each(alimit,function(i,item){
+                if(globla_money<item){
+                    globla_idx=i;
+                    return false;
+                }
+                if(globla_money>alimit[alimit.length-1]){
+                    globla_idx=alimit.length;
+                    return false;
+                }
+            })
+        }
+        function init(){
+            doSwipe();
+        }
+        init();
         function bindEvent(){
              // 首页
             $(".js-btn1").click(switch1);
+
+            $(".js-next").click(function(){
+                doNextMoney();
+            });
+            $(".js-count").click(function(){
+                doCount();
+            });
+            $(".js-identify").click(function(){
+                doIdentify();
+            });
+            $(".js-btn-share").click(function(){
+                Jser.share();
+            })
+        }
+
+        function doSwipe(){
+            var oMap=["爷爷 奶奶","姥姥 姥爷","爸爸 妈妈","自己的孩子","别人家孩子","外甥 外甥女","侄子 侄女","孙子 孙女","其他"];
+            var oNum=[0,0,0,0,0,0,0,0,0];
+            if(!mySwipe){
+                var _html;
+                mySwipe = Swipe(document.getElementById('js-slider'), {
+                    stopPropagation: true,
+                    continuous: true,
+                    speed: 600,
+                    callback: function(idx) {
+                        cachePage = idx % mySwipe.getNumSlides();
+                        _html=oMap[cachePage]+'<span>'+oNum[cachePage]+'</span>个';
+                        $("#js-slider-name").html(_html)
+                    }
+                });   
+                $(".js-btn-left").click(function(){
+                    mySwipe.prev();
+                });
+                $(".js-btn-right").click(function(){
+                    mySwipe.next();
+                });
+                $(".js-btn-minus").click(function(){
+                    var num=oNum[cachePage];
+                    num--;
+                    if(num<0){
+                        num=0;
+                    }
+                    oNum[cachePage]=num;
+                     showhongbao();
+                });
+                 $(".js-btn-add").click(function(){
+                    var num=oNum[cachePage];
+                    num++;
+                    if(num>20){
+                        num=20;
+                    }
+                    oNum[cachePage]=num;
+                     showhongbao();
+                });
+                $(".js-add-hongbao").click(function(){
+                    if(oNum[cachePage]!=0){
+                        var $elem=$("#js-slider-info").find(".hongbao"+cachePage);
+                        var _html='<span class="hongbao'+cachePage+'"><i></i>'+oMap[cachePage]+oNum[cachePage]+'个</span>';
+                        var _html2='<li class="hb'+cachePage+'"><i></i> '+oMap[cachePage]+' '+oMoney[globla_idx][cachePage]*oNum[cachePage]+'元 （'+oNum[cachePage]+'个）</li>';
+                        if($elem.length!=0){
+                            $elem.replaceWith(_html);
+                            $("#js-list").find(".hb"+cachePage).replaceWith(_html2);
+                        }else{
+                            var aElem=$("#js-slider-info").find("span");
+                            $("#js-slider-info").find("li").eq(Math.floor(aElem.length/3)).append(_html);
+                            $("#js-list").append(_html2)
+                        }
+                        var count=0;
+                        var ountMoney=0;
+                        $.each(oNum,function(i,item){
+                            count+=item;
+                            ountMoney+=oMoney[globla_idx][i]*item;
+                        })
+                        $('.js-count-num').html(count);
+                        $('.js-count-money').html(ountMoney);
+                    }else{
+                       Jser.alert("请先添加红包个数");
+                    }                    
+                });
+                function showhongbao(){
+                    var _html=oMap[cachePage]+'<span>'+oNum[cachePage]+'</span>个';
+                    $("#js-slider-name").html(_html)
+                }
+                showhongbao();
+            }
         }
         function switch1(){
             $(".js-wrapper1").hide();
             $(".js-wrapper2").show();
+        }
+        function switch2(){
+            $(".js-wrapper2").hide();
+            $(".js-wrapper3").show();
+            checkLimit();
+            doSwipe();
+        }
+        function switch3(){
+            $(".js-wrapper3").hide();
+            $(".js-wrapper4").show();
+        }
+        function switch4(){
+            $(".js-wrapper4").hide();
+            $(".js-wrapper5").show();
+        }
+        function doIdentify(){
+            switch4();
+            var countMoney=Number($('.js-count-money').text());
+            var idx=0;
+            $.each(alimit,function(i,item){
+                if(countMoney<item){
+                    idx=i;
+                    return false;
+                }
+                if(countMoney>alimit[alimit.length-1]){
+                    idx=alimit.length;
+                    return false;
+                }
+            })
+            $("#js-panel5").removeClass().addClass("t5 t5"+idx);            
+        }
+        function doNextMoney(){
+            if(checkMoney()){
+                switch2();
+            }
+        }
+        function checkMoney(){
+            globla_money=$.trim($(".js-money").val());
+            if(globla_money.length==0){
+                Jser.alert("请输入您的月输入");
+                return false;
+            }else if(!/^\d+$/.test(globla_money)){
+                Jser.alert("请输入正确的月输入");
+                return false;
+            }
+            return true;
+        }
+        function doCount(){
+            if(checkCount()){
+                switch3();
+            }   
+        }
+        function checkCount(){
+            var aElem=$("#js-slider-info").find("span");
+            if(aElem.length==0){
+                Jser.alert("请先添加红包");
+                return false;
+            }
+            return true;
         }
         bindEvent();
 
