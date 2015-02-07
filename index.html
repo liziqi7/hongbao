@@ -12,7 +12,7 @@
 <body>
     <div class="wrap js-wrapper">
         <div id="js-wrap">
-            <div class="wrapper1 js-wrapper1 hide">
+            <div class="wrapper1 js-wrapper1">
                 <img src="resource/images/pic.png" class="pic" />
                 <p class="txt p1">亲爱的XXX同学</p>
                 <img src="resource/images/bg1.png" class="bg1" />
@@ -30,7 +30,7 @@
                 <img src="resource/images/bg2.png" class="bg2" />
                 <div class="btn-next js-next"></div>
             </div>
-            <div class="wrapper3 js-wrapper3 ">
+            <div class="wrapper3 js-wrapper3 hide">
                 <img src="resource/images/t3.png" class="t3"/>
                 <div class="panel3">
                     <div class="slider" id="js-slider">
@@ -139,7 +139,7 @@
             })
         }
         function init(){
-            doSwipe();
+            // doSwipe();
         }
         init();
         function bindEvent(){
@@ -181,16 +181,16 @@
                 $(".js-btn-right").click(function(){
                     mySwipe.next();
                 });
-                $(".js-btn-minus").click(function(){
+                $(".js-btn-minus").on("touchstart",function(){
                     var num=oNum[cachePage];
                     num--;
                     if(num<0){
-                        num=0;
+                        num=20;
                     }
                     oNum[cachePage]=num;
-                     showhongbao();
+                    showhongbao();
                 });
-                 $(".js-btn-add").click(function(){
+                 $(".js-btn-add").on("touchstart",function(){
                     var num=oNum[cachePage];
                     num++;
                     if(num>20){
@@ -213,13 +213,18 @@
                             $("#js-list").append(_html2)
                         }
                         var count=0;
-                        var ountMoney=0;
+                        var countMoney=0;
                         $.each(oNum,function(i,item){
                             count+=item;
-                            ountMoney+=oMoney[globla_idx][i]*item;
+                            countMoney+=oMoney[globla_idx][i]*item;
                         })
                         $('.js-count-num').html(count);
-                        $('.js-count-money').html(ountMoney);
+                        $('.js-count-money').data("countMoney",countMoney); 
+                        if(countMoney>99999){
+                            $('.js-count-money').html((countMoney/10000).toFixed(1)+"万");
+                        }else{
+                            $('.js-count-money').html(countMoney);   
+                        }                                               
                     }else{
                        Jser.alert("请先添加红包个数");
                     }                    
@@ -251,7 +256,7 @@
         }
         function doIdentify(){
             switch4();
-            var countMoney=Number($('.js-count-money').text());
+            var countMoney=Number($('.js-count-money').data("countMoney"));
             var idx=0;
             $.each(alimit,function(i,item){
                 if(countMoney<item){
@@ -259,7 +264,7 @@
                     return false;
                 }
                 if(countMoney>alimit[alimit.length-1]){
-                    idx=alimit.length;
+                    idx=alimit.length-1;
                     return false;
                 }
             })
