@@ -12,7 +12,11 @@
 <body>
     <div class="wrap js-wrapper">
         <div id="js-wrap">
-            <div class="wrapper1 js-wrapper1">
+            <div class="wrapper0 js-wrapper0">
+                <img src="resource/images/bg0.png" class="bg0" />
+                <div class="btn0 js-btn0"></div>
+            </div>
+            <div class="wrapper1 js-wrapper1 hide">
                 <img src="resource/images/pic.png" class="pic" />
                 <p class="txt p1">亲爱的XXX同学</p>
                 <img src="resource/images/bg1.png" class="bg1" />
@@ -118,14 +122,14 @@
         var mySwipe,cachePage=0,globla_money=0,globla_idx=0;
         var alimit=[5000,8000,1100,20000,50000];
         var oMoney={
-            "0":[200,200,200,100,100,100,100,200,100],
-            "1":[500,500,500,200,100,200,200,500,100],
-            "2":[700,700,700,300,200,300,300,500,200],
-            "3":[1000,1000,1000,500,300,500,500,1000,200],
-            "4":[2000,2000,3000,600,500,500,600,1000,500],
-            "5":[10000,10000,10000,1000,1000,2000,2000,2000,500],
+            "0":[200,200,200,100,200,100,100,100,100],
+            "1":[500,500,500,200,500,200,200,100,100],
+            "2":[700,700,700,300,500,300,300,200,200],
+            "3":[1000,1000,1000,500,1000,500,500,300,200],
+            "4":[2000,2000,3000,600,1000,600,500,500,500],
+            "5":[10000,10000,10000,1000,2000,2000,2000,1000,500],
         }
-
+        
         function checkLimit(){
             $.each(alimit,function(i,item){
                 if(globla_money<item){
@@ -143,7 +147,8 @@
         }
         init();
         function bindEvent(){
-             // 首页
+            $(".js-btn0").click(switch0);
+            // 首页
             $(".js-btn1").click(switch1);
 
             $(".js-next").click(function(){
@@ -161,7 +166,7 @@
         }
 
         function doSwipe(){
-            var oMap=["爷爷 奶奶","姥姥 姥爷","爸爸 妈妈","自己的孩子","别人家孩子","外甥 外甥女","侄子 侄女","孙子 孙女","其他"];
+            var oMap=["爷爷 奶奶","姥姥 姥爷","爸爸 妈妈","自己的孩子","孙子 孙女","侄子 侄女","外甥 外甥女","别人家孩子","其他"];
             var oNum=[0,0,0,0,0,0,0,0,0];
             if(!mySwipe){
                 var _html;
@@ -235,6 +240,10 @@
                 }
                 showhongbao();
             }
+        }
+        function switch0(){
+            $(".js-wrapper0").hide();
+            $(".js-wrapper1").show();
         }
         function switch1(){
             $(".js-wrapper1").hide();

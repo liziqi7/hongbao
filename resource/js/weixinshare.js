@@ -2,8 +2,8 @@ var global_origin = window.location.origin || (window.location.protocol + '//' +
 var WeiXinShare = {
   imgUrl: "http://www.lamakeji.com/resource/images/iconlogo.png", //注意必须是绝对路径
   lineLink: global_origin + "/", //同样，必须是绝对路径  
-  shareTitle: document.title, //分享title
-  descContent: document.title, //分享给朋友或朋友圈时的文字简介
+  shareTitle: '又是一年红包飞进飞出时，羊年春节红包支出有多少？快来计算一下吧！', //分享title
+  descContent: '又是一年红包飞进飞出时，羊年春节红包支出有多少？快来计算一下吧！', //分享给朋友或朋友圈时的文字简介
   appid: "", //apiID，可留空
   img_width: "300",
   img_height: "300"
